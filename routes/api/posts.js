@@ -10,7 +10,8 @@ const User = require('../../models/User');
 // @route   GET api/posts
 // @desc    Create post
 // @access  Public
-router.post('/', [auth,
+router.post('/', [
+    auth,
     check('text', 'text is required').not().isEmpty(),
 ], async (req, res) => {
     const errors = validationResult(req);
@@ -161,10 +162,96 @@ router.put('/unlike/:id', auth, async (req, res) => {
         const removeIndex = post.likes.map(like => like.user.toString()).indexOf(req.user.id);
 
         post.likes.splice(removeIndex, 1);
-        
+
         await post.save();
 
         res.json(post.likes);
+    } catch (err) {
+        console.error(err.message);
+
+        if (err.name == 'CastError') {
+            return res.status(404).send({ msg: 'Post not found' })
+        }
+
+        res.status(500).send('Server error');
+    }
+});
+
+// @route   PUT api/posts/comment/:id
+// @desc    Add comment to post
+// @access  Private
+router.put('/comment/:id', [
+    auth,
+    check('text', 'text is required').not().isEmpty(),
+], async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).send({ errors: errors.array() })
+    }
+
+    try {
+        const post = await Post.findById(req.params.id);
+
+        if (!post) {
+            return res.status(404).send({ msg: 'Post not found' })
+        }
+
+        const user = await User.findById(req.user.id)
+
+        const newComment = {
+            text: req.body.text,
+            name: user.name,
+            avatar: user.avatar,
+            user: req.user.id,
+        };
+
+        post.comments.unshift(newComment);
+
+        await post.save();
+
+        res.json(post.comments);
+    } catch (err) {
+        console.error(err.message);
+
+        if (err.name == 'CastError') {
+            return res.status(404).send({ msg: 'Post not found' })
+        }
+
+        res.status(500).send('Server error');
+    }
+});
+
+// @route   DELETE api/posts/comment/:post_id/:comment_id
+// @desc    Delete comment from post
+// @access  Private
+router.delete('/comment/:post_id/:comment_id', auth, async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.post_id);
+
+        if (!post) {
+            return res.status(404).send({ msg: 'Post not found' });
+        }
+
+        const removeIndex = post.comments
+            .map(comment => comment.id)
+            .indexOf(req.params.comment_id);
+
+        if (removeIndex === -1) {
+            return res.status(404).send({ msg: 'Comment not found' });
+        }
+
+        if (post.comments[removeIndex].user.toString() === req.user.id ||  // owner of comment
+            post.user.toString() === req.user.id) {  // owner of post
+            post.comments.splice(removeIndex, 1);
+
+            await post.save();
+
+            res.json(post.comments);
+        } else {
+            return res.status(401).send({ msg: 'Unauthorized' })
+        }
+
     } catch (err) {
         console.error(err.message);
 
