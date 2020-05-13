@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Navbar from './components/layout/Navbar';
@@ -13,21 +13,35 @@ import './App.css';
 import { Provider } from 'react-redux';
 import store from './store';
 
-const App = () => (
-    <Provider store={store}>
-        <Router>
-            <Navbar />
-            <Route exact path='/' component={Landing} />
-            <section className="container">
-                <Alert />
-                <Switch>
-                    <Route exact path='/login' component={Login} />
-                    <Route exact path='/register' component={Register} />
-                </Switch>
-            </section>
-        </Router>
+import { loadUser } from './actions/auth';
+import setAuthToken from './utilities/setAuthToken';
 
-    </Provider>
-);
+if (localStorage.token) {
+    setAuthToken(localStorage.token);
+}
+
+const App = () => {
+
+    useEffect(() => {
+        store.dispatch(loadUser());
+    }, [])
+
+    return (
+        <Provider store={store}>
+            <Router>
+                <Navbar />
+                <Route exact path='/' component={Landing} />
+                <section className="container">
+                    <Alert />
+                    <Switch>
+                        <Route exact path='/login' component={Login} />
+                        <Route exact path='/register' component={Register} />
+                    </Switch>
+                </section>
+            </Router>
+
+        </Provider>
+    )
+};
 
 export default App;

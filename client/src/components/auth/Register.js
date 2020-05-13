@@ -21,7 +21,7 @@ const Register = ({ setAlert, removeAlerts, register }) => {
         return () => {
             removeAlerts();
         }
-    }, [])
+    }, [removeAlerts])
 
     const { name, email, password, confirmPassword } = formData;
 
