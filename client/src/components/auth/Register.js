@@ -1,12 +1,15 @@
-import React, { Fragment, useState } from 'react';
-import axios from 'axios';
+import React, { Fragment, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux'
+
+import { register } from './../../actions/auth';
+import { setAlert, removeAlerts } from './../../actions/alert';
 
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const Register = () => {
+const Register = ({ setAlert, removeAlerts, register }) => {
 
-    const [errors, setErrors] = useState([]);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -14,47 +17,33 @@ const Register = () => {
         confirmPassword: ''
     });
 
+    useEffect(() => {
+        return () => {
+            removeAlerts();
+        }
+    }, [])
+
     const { name, email, password, confirmPassword } = formData;
 
     const onSubmit = async (e) => {
         e.preventDefault();
+        removeAlerts();
 
         if (!name || !email || !password || !confirmPassword ||
             password.length < 6 || confirmPassword.length < 6) {
-
-            alert('Please provide valid credentials');
-
+            setAlert('Please provide valid credentials', 'danger');
         } else if (password !== confirmPassword) {
-
-            alert('Passwords do not match');
-
+            setAlert('Passwords do not match', 'danger');
         } else {
             console.log('Valid data', formData);
-
             const newUser = { name, email, password };
 
-            await axios.post('/api/users', newUser)
-                .then(({ data }) => {
-                    console.log(data);
-                }).catch((error) => {
-                    if (error.response) {
-                        console.log('Errors', error.response.data.errors);
-                        setErrors(error.response.data.errors)
-                    }
-                    console.log(error);
-                    alert('An error occured');
-                });
+            register(newUser);
         }
     }
 
     return (
         <Fragment>
-            {errors.length !== 0 && (
-                <div className="alert alert-danger text-center">
-                    {errors.map(error => (<p>{error}</p>))}
-                </div>
-            )
-            }
             <h1 className="large text-primary">Sign Up</h1>
             <p className="lead">
                 <FontAwesomeIcon icon={faUser} /> Create Your Account
@@ -116,11 +105,12 @@ const Register = () => {
                 </div>
                 <input type="submit" className="btn btn-primary" value="Register" onClick={(e) => onSubmit(e)} />
             </form>
+
             <p className="my-1">
-                Already have an account? <a href="login.html">Sign In</a>
+                Already have an account? <Link to='/login'>Sign In</Link>
             </p>
         </Fragment>
     )
 }
 
-export default Register;
+export default connect(null, { setAlert, removeAlerts, register })(Register);

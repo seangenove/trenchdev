@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 import { faUser } from '@fortawesome/free-solid-svg-icons';
@@ -83,7 +84,8 @@ const Login = () => {
                 />
             </form>
             <p className="my-1">
-                Don't have an account? <a href="register.html">Sign Up</a>
+            
+                Don't have an account? <Link to='/register'>Sign Up</Link>
             </p>
         </Fragment>
     )
