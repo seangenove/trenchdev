@@ -1,5 +1,6 @@
 import axios from 'axios';
 import _ from 'lodash';
+import setAuthToken from '../utilities/setAuthToken';
 
 export const API_SUCCESS = 'success';
 export const API_ERROR = 'error';
@@ -31,6 +32,10 @@ export const AppApiRequest = async (endpoint, method, onSuccess, onError, data =
         }
 
     }
+
+                if (localStorage.token) {
+                setAuthToken(localStorage.token);
+            }
 
     await axios({
         url: endpoint,
