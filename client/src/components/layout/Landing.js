@@ -1,7 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-const Landing = () => {
+const Landing = ({ isAuthenticated }) => {
     return (
         <section className="landing">
             <div className="dark-overlay">
@@ -11,18 +12,24 @@ const Landing = () => {
                         Create a developer profile/portfolio, share posts and get help from
             other developers
                     </p>
-                    <div className="buttons">
-                        <Link className="btn btn-primary" to='/register'>
-                            Sign Up
+                    {!isAuthenticated && (
+                        <div className="buttons">
+                            <Link className="btn btn-primary" to='/register'>
+                                Sign Up
                         </Link>
-                        <Link className="btn btn-light" to='/login'>
-                            Login
+                            <Link className="btn btn-light" to='/login'>
+                                Login
                         </Link>
-                    </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </section>
     );
 };
 
-export default Landing
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps)(Landing);

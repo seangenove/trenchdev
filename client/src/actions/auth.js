@@ -8,7 +8,8 @@ import {
     USER_LOADED,
     AUTH_ERROR,
     LOGIN_SUCCESS,
-    LOGIN_FAIL
+    LOGIN_FAIL,
+    LOGOUT
 } from '../actions/types';
 
 export const loadUser = () => async dispatch => {
@@ -50,7 +51,7 @@ export const register = (name, email, password) => async dispatch => {
                 payload: data
             });
 
-            dispatch(loadUser()); 
+            dispatch(loadUser());
 
         }).catch((error) => {
             dispatch({
@@ -98,4 +99,10 @@ export const login = (email, password) => async dispatch => {
                 console.log('Errors', error.response.data.errors);
             }
         });
+}
+
+// Logout
+export const logout = () => dispatch => {
+    console.log('boomz');
+    dispatch({ type: LOGOUT });
 }
