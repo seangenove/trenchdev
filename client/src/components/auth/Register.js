@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux'
 
 import { register } from './../../actions/auth';
@@ -8,7 +8,7 @@ import { setAlert, removeAlerts } from './../../actions/alert';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const Register = ({ setAlert, removeAlerts, register }) => {
+const Register = ({ setAlert, removeAlerts, register, isAuthenticated }) => {
 
     const [formData, setFormData] = useState({
         name: '',
@@ -29,17 +29,21 @@ const Register = ({ setAlert, removeAlerts, register }) => {
         e.preventDefault();
         removeAlerts();
 
-        if (!name || !email || !password || !confirmPassword ||
-            password.length < 6 || confirmPassword.length < 6) {
+        if (!name || !email || !password || !confirmPassword || password.length < 6 || confirmPassword.length < 6) {
             setAlert('Please provide valid credentials', 'danger');
         } else if (password !== confirmPassword) {
             setAlert('Passwords do not match', 'danger');
         } else {
+            // Valid credentials
             console.log('Valid data', formData);
-            const newUser = { name, email, password };
 
-            register(newUser);
+            register(name, email, password);
         }
+    }
+
+    // Redirect if logged in
+    if (isAuthenticated) {
+        return <Redirect to="/dashboard" />
     }
 
     return (
@@ -113,4 +117,8 @@ const Register = ({ setAlert, removeAlerts, register }) => {
     )
 }
 
-export default connect(null, { setAlert, removeAlerts, register })(Register);
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated 
+});
+
+export default connect(mapStateToProps, { setAlert, removeAlerts, register })(Register);

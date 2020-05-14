@@ -1,17 +1,25 @@
-import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import React, { Fragment, useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Link, Redirect } from 'react-router-dom';
+
+import { login } from '../../actions/auth';
+import { removeAlerts } from './../../actions/alert';
 
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const Login = () => {
+const Login = ({ login, removeAlerts, isAuthenticated }) => {
 
-    const [errors, setErrors] = useState([]);
     const [loginCredentials, setLoginCredentials] = useState({
         email: '',
         password: ''
     });
+
+    useEffect(() => {
+        return () => {
+            removeAlerts();
+        }
+    }, [removeAlerts])
 
     const { email, password } = loginCredentials;
 
@@ -23,29 +31,17 @@ const Login = () => {
             alert('Please provide email and password');
         } else {
             // Valid credentials, attempt to authenticate user
-            await axios.post('/api/auth', { email, password })
-                .then(({ data }) => {
-                    setErrors([]);
-                    console.log('SUCCESS', data);
-                }).catch((error) => {
-                    if (error.response.data.errors) {
-                        setErrors(error.response.data.errors);
-                        console.log('Errors', error.response.data.errors);
-                    }
-                    console.log(error);
-                    alert('An error occured');
-                });
+            login(email, password);
         }
     };
+    
+    // Redirect if logged in
+    if (isAuthenticated) {
+        return <Redirect to="/dashboard" />
+    }
 
     return (
         <Fragment>
-            {errors.length !== 0 && (
-                <div className="alert alert-danger text-center">
-                    Invalid credentials
-                </div>
-            )
-            }
             <h1 className="large text-primary">Sign In</h1>
             <p className="lead">
                 <FontAwesomeIcon icon={faUser} /> Sign Into Your Account
@@ -84,11 +80,15 @@ const Login = () => {
                 />
             </form>
             <p className="my-1">
-            
+
                 Don't have an account? <Link to='/register'>Sign Up</Link>
             </p>
         </Fragment>
     )
 }
 
-export default Login;
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated 
+});
+
+export default connect(mapStateToProps, { login, removeAlerts })(Login);
