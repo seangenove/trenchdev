@@ -7,5 +7,9 @@ import {AppApiRequest} from "./index";
  * @param onFailure
  */
 export const fetchProfile = (onSuccess, onFailure) => {
-    AppApiRequest(Endpoints.PROFILE, 'GET', onSuccess, onFailure);
+    AppApiRequest(Endpoints.USER_PROFILE, 'GET', onSuccess, onFailure);
+};
+
+export const upsertProfile = (data, onSuccess, onFailure) => {
+    AppApiRequest(Endpoints.PROFILE, 'POST', onSuccess, onFailure, data);
 };

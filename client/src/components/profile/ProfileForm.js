@@ -1,5 +1,9 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { fetchProfile } from '../../services/ProfileServices';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { fetchProfile, upsertProfile } from '../../services/ProfileServices';
+
+import { setAlert, removeAlerts } from '../../actions/alert';
 
 import Spinner from '../layout/Spinner';
 
@@ -7,8 +11,9 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { faTwitter, faFacebook, faYoutube, faLinkedin, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const ProfileForm = () => {
+const ProfileForm = ({ setAlert, removeAlerts }) => {
 
+    const [redirect, setRedirect] = useState(null);
     const [showSocialInputs, setShowSocialInputs] = useState(false);
     const [formData, setFormData] = useState({
         company: '',
@@ -36,8 +41,25 @@ const ProfileForm = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
+        removeAlerts();
 
-        console.log(formData);
+        if (!formData.status && !formData.skills) {
+            setAlert('The status and skills fields are required', 'danger')
+        } else if (!formData.status || !formData.skills) {
+            setAlert(`The ${formData.status ? 'skills' : 'status'} field is required`, 'danger')
+        } else {
+            // Validation success
+            console.log(formData);
+
+            upsertProfile(formData, (profile) => {
+                console.log('Profile data from server', profile);
+
+                setAlert('Successfully created profile!', 'success');
+                setRedirect('/dashboard');
+            }, (error) => {
+                console.log(error);
+            });
+        }
     }
 
     useEffect(() => {
@@ -53,6 +75,10 @@ const ProfileForm = () => {
         }
     }, [showSocialInputs]);
 
+    if (redirect) {
+        return <Redirect to={redirect}></Redirect>
+    }
+
     return (
         <Fragment>
 
@@ -60,16 +86,17 @@ const ProfileForm = () => {
             <p className="lead">
                 <FontAwesomeIcon icon={faUser} />{' '}Let's get some information to make your profile stand out
             </p>
-            <small>* = required field</small>
+            <small>Fields marked with an * are required</small>
             <form className="form" onSubmit={(e) => onSubmit(e)}>
                 <div className="form-group">
+                    <label className="form-label" htmlFor="status">* Professional Status</label>
                     <select
                         name="status"
-                        value={formData.status}
-                        onChange={(e) => onChange(e)}
                         required
+                        value={formData.status === '' ? '* Select Professional Status' : formData.status}
+                        onChange={(e) => onChange(e)}
                     >
-                        <option value="0">* Select Professional Status</option>
+                        <option disabled> * Select Professional Status</option>
                         <option value="Developer">Developer</option>
                         <option value="Junior Developer">Junior Developer</option>
                         <option value="Senior Developer">Senior Developer</option>
@@ -85,9 +112,10 @@ const ProfileForm = () => {
                 </div>
 
                 <div className="form-group">
+                    <label className="form-label" htmlFor="company">Company</label>
                     <input
                         type="text"
-                        placeholder="Company"
+                        placeholder="Enter company"
                         name="company"
                         value={formData.company}
                         onChange={(e) => onChange(e)}
@@ -98,9 +126,10 @@ const ProfileForm = () => {
                 </div>
 
                 <div className="form-group">
+                    <label className="form-label" htmlFor="website">Website</label>
                     <input
                         type="text"
-                        placeholder="Website"
+                        placeholder="Enter website"
                         name="website"
                         value={formData.website}
                         onChange={(e) => onChange(e)}
@@ -111,9 +140,10 @@ const ProfileForm = () => {
                 </div>
 
                 <div className="form-group">
+                    <label className="form-label" htmlFor="location">Location</label>
                     <input
                         type="text"
-                        placeholder="Location"
+                        placeholder="Enter location"
                         name="location"
                         value={formData.location}
                         onChange={(e) => onChange(e)}
@@ -124,9 +154,10 @@ const ProfileForm = () => {
                 </div>
 
                 <div className="form-group">
+                    <label className="form-label" htmlFor="skills">Skills</label>
                     <input
                         type="text"
-                        placeholder="* Skills"
+                        placeholder="Enter skills"
                         name="skills"
                         required
                         value={formData.skills}
@@ -138,9 +169,10 @@ const ProfileForm = () => {
                 </div>
 
                 <div className="form-group">
+                    <label className="form-label" htmlFor="githubusername">Github Username</label>
                     <input
                         type="text"
-                        placeholder="Github Username"
+                        placeholder="Enter Github Username"
                         name="githubusername"
                         value={formData.githubusername}
                         onChange={(e) => onChange(e)}
@@ -151,8 +183,9 @@ const ProfileForm = () => {
                 </div>
 
                 <div className="form-group">
+                    <label className="form-label" htmlFor="bio">Bio</label>
                     <textarea
-                        placeholder="A short bio of yourself"
+                        placeholder="Enter a short bio of yourself"
                         name="bio"
                         value={formData.bio}
                         onChange={(e) => onChange(e)}
@@ -230,12 +263,12 @@ const ProfileForm = () => {
                     </Fragment>
                 )}
 
-                <input type="submit" className="btn btn-primary my-1" />
                 <a className="btn btn-light my-1" href="dashboard.html">Go Back</a>
+                <input type="submit" className="btn btn-primary my-1" onClick={(e) => onSubmit(e)} />
             </form>
 
         </Fragment>
     )
 }
 
-export default ProfileForm;
+export default connect(null, { setAlert, removeAlerts })(ProfileForm);

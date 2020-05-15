@@ -82,8 +82,6 @@ router.post('/', [
         await profile.save();
 
         res.json(profile);
-
-
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
