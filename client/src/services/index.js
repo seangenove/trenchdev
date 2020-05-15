@@ -33,9 +33,9 @@ export const AppApiRequest = async (endpoint, method, onSuccess, onError, data =
 
     }
 
-                if (localStorage.token) {
-                setAuthToken(localStorage.token);
-            }
+    if (localStorage.token) {
+        setAuthToken(localStorage.token);
+    }
 
     await axios({
         url: endpoint,

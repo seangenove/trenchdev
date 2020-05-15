@@ -61,7 +61,6 @@ export const register = (name, email, password) => async dispatch => {
             const errors = error.response.data.errors;
 
             if (errors) {
-                console.log('pasok dito');
                 errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
             }
 
@@ -91,7 +90,6 @@ export const login = (email, password) => async dispatch => {
             const errors = error.response.data.errors;
 
             if (errors) {
-                console.log('pasok dito');
                 errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
             }
 
@@ -103,6 +101,5 @@ export const login = (email, password) => async dispatch => {
 
 // Logout
 export const logout = () => dispatch => {
-    console.log('boomz');
     dispatch({ type: LOGOUT });
 }

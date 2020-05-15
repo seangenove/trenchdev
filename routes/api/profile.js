@@ -321,7 +321,22 @@ const parseProfileData = (req) => {
         linkedin
     } = req.body;
 
-    const profileFields = {};
+    const profileFields = {
+        company: '',
+        website: '',
+        location: '',
+        status: '',
+        skills: '',
+        githubusername: '',
+        bio: '',
+        social: {
+            twitter: '',
+            facebook: '',
+            linkedin: '',
+            youtube: '',
+            instagram: ''
+        }
+    };
     profileFields.user = req.user.id;
 
     if (company) profileFields.company = company;
@@ -335,7 +350,6 @@ const parseProfileData = (req) => {
         profileFields.skills = skills.split(',').map(skill => skill.trim())
     }
 
-    profileFields.social = {};
     if (youtube) profileFields.social.youtube = youtube;
     if (twitter) profileFields.social.twitter = twitter;
     if (facebook) profileFields.social.facebook = facebook;

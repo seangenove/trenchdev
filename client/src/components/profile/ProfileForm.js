@@ -34,7 +34,7 @@ const ProfileForm = ({ isCreateMode = true, setAlert, removeAlerts }) => {
 
     const getProfile = () => {
         fetchProfile((profile) => {
-            console.log('edit profile', profile);
+            console.log('Profile data from server', profile);
 
             setProfile(profile);
             setFormData({
@@ -56,12 +56,11 @@ const ProfileForm = ({ isCreateMode = true, setAlert, removeAlerts }) => {
 
             if (profile.social.twitter || profile.social.facebook || profile.social.linkedin ||
                 profile.social.youtube || profile.social.instagram) {
-                console.log('meron');
                 setShowSocialInputs(true);
             }
         }, (error) => {
             console.log(error);
-
+            setRedirect('/dashboard');
         });
     }
 
@@ -79,16 +78,25 @@ const ProfileForm = ({ isCreateMode = true, setAlert, removeAlerts }) => {
         removeAlerts();
 
         if (!formData.status && !formData.skills) {
-            setAlert('The status and skills fields are required', 'danger')
+            setAlert('The status and skills fields are required', 'danger');
+            window.scrollTo({
+                left: 0,
+                top: 0,
+                behavior: "smooth"
+            });
         } else if (!formData.status || !formData.skills) {
-            setAlert(`The ${formData.status ? 'skills' : 'status'} field is required`, 'danger')
+            setAlert(`The ${formData.status ? 'skills' : 'status'} field is required`, 'danger');
+            window.scrollTo({
+                left: 0,
+                top: 0,
+                behavior: "smooth"
+            });
         } else {
             // Validation success
-            console.log(formData);
+            console.log('Form Data', formData);
 
             upsertProfile(formData, (profile) => {
                 console.log('Profile data from server', profile);
-
                 setAlert(`Successfully ${isCreateMode ? 'created' : 'updated'} profile!`, 'success');
                 setRedirect('/dashboard');
             }, (error) => {
@@ -108,7 +116,7 @@ const ProfileForm = ({ isCreateMode = true, setAlert, removeAlerts }) => {
     }, []);
 
     useEffect(() => {
-        if (isCreateMode && !showSocialInputs) {
+        if (!showSocialInputs) {
             setFormData({
                 ...formData,
                 twitter: '',

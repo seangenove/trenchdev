@@ -13,8 +13,6 @@ const Dashboard = ({ user, isAuthenticated }) => {
 
     const getProfile = () => {
         fetchProfile((profile) => {
-            console.log('in service', profile);
-
             setProfile(profile);
             setLoading(false);
         }, (error) => {
