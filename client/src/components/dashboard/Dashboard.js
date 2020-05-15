@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom';
 import { fetchProfile } from '../../services/ProfileServices';
 
 import Spinner from '../layout/Spinner';
-
-import { faUserCircle, faGraduationCap, faUserTie } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import DashboardActions from './DashboardActions';
 
 const Dashboard = ({ user, isAuthenticated }) => {
 
@@ -34,21 +32,10 @@ const Dashboard = ({ user, isAuthenticated }) => {
         <Fragment>
             <h1 className="large text-primary">
                 Dashboard
-             </h1>
+            </h1>
             <p className="lead"><i className="fas fa-user"></i> Welcome {user && user.name} </p>
-            <div className="dash-buttons">
-                <a href="#" className="btn btn-light">
-                    <FontAwesomeIcon className="text-primary" icon={faUserCircle} /> Edit Profile
-                </a>
-                <a href="#" className="btn btn-light">
-                    <FontAwesomeIcon className="text-primary" icon={faUserTie} /> Add Experience
-                </a>
-                <a href="#" className="btn btn-light">
-                    <FontAwesomeIcon className="text-primary" icon={faGraduationCap} /> Add Education
-                </a>
-            </div>
 
-            {profile !== null ? (<h1>Has profile</h1>) : (
+            {profile !== null ? (<DashboardActions />) : (
                 <Fragment>
                     <p>You have no profile, please add some info</p>
                     <Link to='/create-profile' className="btn btn-primary my-1">

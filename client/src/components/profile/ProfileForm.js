@@ -1,8 +1,8 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchProfile, upsertProfile } from '../../services/ProfileServices';
 
+import { fetchProfile, upsertProfile } from '../../services/ProfileServices';
 import { setAlert, removeAlerts } from '../../actions/alert';
 
 import Spinner from '../layout/Spinner';
@@ -11,10 +11,12 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { faTwitter, faFacebook, faYoutube, faLinkedin, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const ProfileForm = ({ setAlert, removeAlerts }) => {
+const ProfileForm = ({ isCreateMode = true, setAlert, removeAlerts }) => {
 
+    const [loading, setLoading] = useState(true);
     const [redirect, setRedirect] = useState(null);
     const [showSocialInputs, setShowSocialInputs] = useState(false);
+    const [profile, setProfile] = useState(null);
     const [formData, setFormData] = useState({
         company: '',
         website: '',
@@ -29,6 +31,39 @@ const ProfileForm = ({ setAlert, removeAlerts }) => {
         youtube: '',
         instagram: '',
     });
+
+    const getProfile = () => {
+        fetchProfile((profile) => {
+            console.log('edit profile', profile);
+
+            setProfile(profile);
+            setFormData({
+                ...formData,
+                company: !profile.company ? '' : profile.company,
+                website: !profile.website ? '' : profile.website,
+                location: !profile.location ? '' : profile.location,
+                status: !profile.status ? '' : profile.status,
+                skills: !profile.skills ? '' : profile.skills.join(', '),
+                githubusername: !profile.githubusername ? '' : profile.githubusername,
+                bio: !profile.bio ? '' : profile.bio,
+                twitter: !profile.social.twitter ? '' : profile.social.twitter,
+                facebook: !profile.social.facebook ? '' : profile.social.facebook,
+                linkedin: !profile.social.linkedin ? '' : profile.social.linkedin,
+                youtube: !profile.social.youtube ? '' : profile.social.youtube,
+                instagram: !profile.social.instagram ? '' : profile.social.instagram,
+            });
+            setLoading(false);
+
+            if (profile.social.twitter || profile.social.facebook || profile.social.linkedin ||
+                profile.social.youtube || profile.social.instagram) {
+                console.log('meron');
+                setShowSocialInputs(true);
+            }
+        }, (error) => {
+            console.log(error);
+
+        });
+    }
 
     const onChange = (e) => {
         e.preventDefault();
@@ -54,7 +89,7 @@ const ProfileForm = ({ setAlert, removeAlerts }) => {
             upsertProfile(formData, (profile) => {
                 console.log('Profile data from server', profile);
 
-                setAlert('Successfully created profile!', 'success');
+                setAlert(`Successfully ${isCreateMode ? 'created' : 'updated'} profile!`, 'success');
                 setRedirect('/dashboard');
             }, (error) => {
                 console.log(error);
@@ -63,7 +98,17 @@ const ProfileForm = ({ setAlert, removeAlerts }) => {
     }
 
     useEffect(() => {
-        if (!showSocialInputs) {
+        removeAlerts();
+
+        if (!isCreateMode) {
+            getProfile();
+        } else {
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (isCreateMode && !showSocialInputs) {
             setFormData({
                 ...formData,
                 twitter: '',
@@ -72,6 +117,15 @@ const ProfileForm = ({ setAlert, removeAlerts }) => {
                 youtube: '',
                 instagram: '',
             })
+        } else if (!isCreateMode && showSocialInputs) {
+            setFormData({
+                ...formData,
+                twitter: !profile.social.twitter ? '' : profile.social.twitter,
+                facebook: !profile.social.facebook ? '' : profile.social.facebook,
+                linkedin: !profile.social.linkedin ? '' : profile.social.linkedin,
+                youtube: !profile.social.youtube ? '' : profile.social.youtube,
+                instagram: !profile.social.instagram ? '' : profile.social.instagram,
+            })
         }
     }, [showSocialInputs]);
 
@@ -79,10 +133,10 @@ const ProfileForm = ({ setAlert, removeAlerts }) => {
         return <Redirect to={redirect}></Redirect>
     }
 
-    return (
+    return loading ? (<Spinner />) : (
         <Fragment>
 
-            <h1 className="large text-primary">Create Your Profile</h1>
+            <h1 className="large text-primary">{isCreateMode ? 'Create' : 'Update'} Your Profile</h1>
             <p className="lead">
                 <FontAwesomeIcon icon={faUser} />{' '}Let's get some information to make your profile stand out
             </p>
