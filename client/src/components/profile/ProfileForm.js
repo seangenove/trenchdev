@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -325,7 +326,7 @@ const ProfileForm = ({ isCreateMode = true, setAlert, removeAlerts }) => {
                     </Fragment>
                 )}
 
-                <a className="btn btn-light my-1" href="dashboard.html">Go Back</a>
+                <Link to='/dashboard' className="btn btn-light my-1">Go Back</Link>
                 <input type="submit" className="btn btn-primary my-1" onClick={(e) => onSubmit(e)} />
             </form>
 

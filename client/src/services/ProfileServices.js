@@ -1,5 +1,5 @@
 import Endpoints from "../config/Endpoints";
-import {AppApiRequest} from "./index";
+import { AppApiRequest } from "./index";
 
 /**
  * Fetch All Faqs for account
@@ -12,4 +12,8 @@ export const fetchProfile = (onSuccess, onFailure) => {
 
 export const upsertProfile = (data, onSuccess, onFailure) => {
     AppApiRequest(Endpoints.PROFILE, 'POST', onSuccess, onFailure, data);
+};
+
+export const addExperience = (data, onSuccess, onFailure) => {
+    AppApiRequest(Endpoints.ADD_EXPERIENCE, 'POST', onSuccess, onFailure, data);
 };

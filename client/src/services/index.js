@@ -16,7 +16,6 @@ export const API_ERROR = 'error';
  */
 export const AppApiRequest = async (endpoint, method, onSuccess, onError, data = {}) => {
 
-
     if (method.toUpperCase() === 'GET' && !_.isEmpty(data)) {
         // Convert data to query params
         // { a: b, c: d}  -----> /endpoint?a=b&c=d
