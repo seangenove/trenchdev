@@ -18,6 +18,7 @@ export const addExperience = (data, onSuccess, onFailure) => {
     AppApiRequest(Endpoints.ADD_EXPERIENCE, 'POST', onSuccess, onFailure, data);
 };
 
+
 export const addEducation = (data, onSuccess, onFailure) => {
     AppApiRequest(Endpoints.ADD_EDUCATION, 'POST', onSuccess, onFailure, data);
 };

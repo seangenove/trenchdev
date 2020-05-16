@@ -5,6 +5,8 @@ import { fetchProfile } from '../../services/ProfileServices';
 
 import Spinner from '../layout/Spinner';
 import DashboardActions from './DashboardActions';
+import ExperienceList from './ExperienceList';
+import EducationList from './EducationList';
 
 const Dashboard = ({ user, isAuthenticated }) => {
 
@@ -13,6 +15,7 @@ const Dashboard = ({ user, isAuthenticated }) => {
 
     const getProfile = () => {
         fetchProfile((profile) => {
+            console.log(profile);
             setProfile(profile);
             setLoading(false);
         }, (error) => {
@@ -33,17 +36,26 @@ const Dashboard = ({ user, isAuthenticated }) => {
             </h1>
             <p className="lead"><i className="fas fa-user"></i> Welcome {user && user.name} </p>
 
-            {profile !== null ? (<DashboardActions />) : (
-                <Fragment>
-                    <p>You have no profile, please add some info</p>
-                    <Link to='/create-profile' className="btn btn-primary my-1">
-                        Create Profile
+            {profile !== null ? (
+                <div>
+                    <DashboardActions />
+                    <ExperienceList experiences={profile.experience}/>
+                    <EducationList education={profile.education}/>
+                </div>
+
+            ) : (
+                    <Fragment>
+                        <p>You have no profile, please add some info</p>
+                        <Link to='/create-profile' className="btn btn-primary my-1">
+                            Create Profile
                     </Link>
-                </Fragment>
-            )}
+                    </Fragment>
+                )}
         </Fragment>
     )
 }
+
+
 
 const mapStateToProps = (state) => ({
     user: state.auth.user,
