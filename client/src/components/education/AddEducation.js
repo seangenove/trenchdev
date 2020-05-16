@@ -34,13 +34,14 @@ const AddEducation = ({ setAlert, removeAlerts }) => {
     const onSubmit = (e) => {
         e.preventDefault();
         removeAlerts();
+        console.log(formData);
 
-        if (formData.current && (!formData.school || !formData.degree || !formData.from)) {
-            setAlert('The school, degree, and from date fields are required', 'danger');
+        if (formData.current && (!formData.school || !formData.degree || !formData.fieldOfStudy || !formData.from)) {
+            setAlert('The school, degree, field of study and from date fields are required', 'danger');
 
             window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
-        } else if (!formData.current && (!formData.school || !formData.degree || !formData.from || !formData.to) ) {
-            setAlert('The school, degree, from date, and to date fields are required', 'danger');
+        } else if (!formData.current && (!formData.school || !formData.degree || !formData.fieldOfStudy || !formData.from || !formData.to) ) {
+            setAlert('The school, degree, field of study, from date, and to date fields are required', 'danger');
 
             window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
         } else {
@@ -49,13 +50,12 @@ const AddEducation = ({ setAlert, removeAlerts }) => {
             addEducation(formData, (education) => {
                 console.log('Education data from server', education);
 
-                setAlert('Successfully added education!', 'success');
+                setAlert('Successfully added education credential!', 'success');
                 setRedirect('/dashboard');
             }, (error) => {
                 console.log(error);
             });
         }
-
     }
 
     if (redirect) {
@@ -69,7 +69,7 @@ const AddEducation = ({ setAlert, removeAlerts }) => {
             </h1>
             <p className="lead">
                 <FontAwesomeIcon icon={faGraduationCap}/> Add any school, bootcamp, etc that
-        you have attendeddev
+        you have attended
             </p>
             <small>Fields marked with an * are required</small>
             <form className="form" onSubmit={(e) => onSubmit(e)}>
@@ -95,7 +95,7 @@ const AddEducation = ({ setAlert, removeAlerts }) => {
                         required />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="fieldOfStudy">Field of Study</label>
+                    <label className="form-label" htmlFor="fieldOfStudy">* Field of Study</label>
                     <input
                         type="text"
                         placeholder="Enter Location"

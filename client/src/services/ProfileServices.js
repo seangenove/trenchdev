@@ -14,11 +14,22 @@ export const upsertProfile = (data, onSuccess, onFailure) => {
     AppApiRequest(Endpoints.PROFILE, 'POST', onSuccess, onFailure, data);
 };
 
-export const addExperience = (data, onSuccess, onFailure) => {
-    AppApiRequest(Endpoints.ADD_EXPERIENCE, 'POST', onSuccess, onFailure, data);
+export const deleteProfile = (onSuccess, onFailure) => {
+    AppApiRequest(Endpoints.PROFILE, 'DELETE', onSuccess, onFailure);
 };
 
+export const addExperience = (data, onSuccess, onFailure) => {
+    AppApiRequest(Endpoints.EXPERIENCE, 'POST', onSuccess, onFailure, data);
+};
+
+export const deleteExperience = (id, onSuccess, onFailure) => {
+    AppApiRequest(`${Endpoints.EXPERIENCE}/${id}`, 'DELETE', onSuccess, onFailure);
+};
 
 export const addEducation = (data, onSuccess, onFailure) => {
-    AppApiRequest(Endpoints.ADD_EDUCATION, 'POST', onSuccess, onFailure, data);
+    AppApiRequest(Endpoints.EDUCATION, 'POST', onSuccess, onFailure, data);
+};
+
+export const deleteEducation = (id, onSuccess, onFailure) => {
+    AppApiRequest(`${Endpoints.EDUCATION}/${id}`, 'DELETE', onSuccess, onFailure);
 };

@@ -1,34 +1,28 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 
 import { login } from '../../actions/auth';
-import { removeAlerts } from './../../actions/alert';
+import { setAlert, removeAlerts } from './../../actions/alert';
 
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const Login = ({ login, removeAlerts, isAuthenticated }) => {
+const Login = ({ login, setAlert, removeAlerts, isAuthenticated }) => {
 
     const [loginCredentials, setLoginCredentials] = useState({
         email: '',
         password: ''
     });
 
-    useEffect(() => {
-        return () => {
-            removeAlerts();
-        }
-    }, [removeAlerts])
-
     const { email, password } = loginCredentials;
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        console.log('Provided credentials', loginCredentials);
+        removeAlerts();
 
         if (!email || !password) {
-            alert('Please provide email and password');
+            setAlert('Please provide email and password', 'danger');
         } else {
             // Valid credentials, attempt to authenticate user
             login(email, password);
@@ -91,4 +85,4 @@ const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated 
 });
 
-export default connect(mapStateToProps, { login, removeAlerts })(Login);
+export default connect(mapStateToProps, { login, setAlert, removeAlerts })(Login);

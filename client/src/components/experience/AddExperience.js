@@ -49,7 +49,7 @@ const AddExperience = ({ setAlert, removeAlerts }) => {
             addExperience(formData, (experience) => {
                 console.log('Experience data from server', experience);
 
-                setAlert('Successfully added experience!', 'success');
+                setAlert('Successfully added experience credential!', 'success');
                 setRedirect('/dashboard');
             }, (error) => {
                 console.log(error);

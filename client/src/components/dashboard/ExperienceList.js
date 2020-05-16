@@ -1,11 +1,23 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React from 'react';
 import Moment from 'react-moment';
-// import { fetchProfile } from '../../services/ProfileServices';
 
-const ExperienceList = ({ experiences }) => {
+import { deleteExperience } from '../../services/ProfileServices';
 
-    const deleteExperience = (id) => {
-        console.log('delete', id);
+const ExperienceList = ({ experiences, setProfile }) => {
+
+    const onDelete = (id) => {
+        const confirmDelete = window.confirm(`Are you sure you want to delete this experience credential?`);
+
+        if (confirmDelete) {
+
+            deleteExperience(id, (profile) => {
+                console.log('Updated profile from server', profile);
+                setProfile(profile);
+            }, (error) => {
+                alert("There was a problem deleting the experience entry");
+                console.log(error);
+            })
+        }
     }
 
     return experiences.length === 0 ? (<p>No experiences added.</p>) : (
@@ -33,7 +45,7 @@ const ExperienceList = ({ experiences }) => {
                                 <td>
                                     <button
                                         className="btn btn-danger"
-                                        onClick={() => deleteExperience(_id)}
+                                        onClick={() => onDelete(_id)}
                                     >
                                         Delete
                                     </button>
