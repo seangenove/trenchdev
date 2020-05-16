@@ -217,7 +217,7 @@ const ProfileForm = ({ isCreateMode = true, setAlert, removeAlerts }) => {
                 </div>
 
                 <div className="form-group">
-                    <label className="form-label" htmlFor="skills">Skills</label>
+                    <label className="form-label" htmlFor="skills">* Skills</label>
                     <input
                         type="text"
                         placeholder="Enter skills"
