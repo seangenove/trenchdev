@@ -69,7 +69,7 @@ const AddEducation = ({ setAlert, removeAlerts }) => {
             </h1>
             <p className="lead">
                 <FontAwesomeIcon icon={faGraduationCap}/> Add any school, bootcamp, etc that
-        you have attended
+        you have attendeddev
             </p>
             <small>Fields marked with an * are required</small>
             <form className="form" onSubmit={(e) => onSubmit(e)}>
