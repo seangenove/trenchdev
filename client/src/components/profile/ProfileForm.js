@@ -145,7 +145,7 @@ const ProfileForm = ({ isCreateMode = true, setAlert, removeAlerts }) => {
     return loading ? (<Spinner />) : (
         <Fragment>
 
-            <h1 className="large text-primary">{isCreateMode ? 'Create' : 'Update'} Your Profile</h1>
+            <h1 className="large text-primary">{isCreateMode ? 'Create' : 'Edit'} Your Profile</h1>
             <p className="lead">
                 <FontAwesomeIcon icon={faUser} />{' '}Let's get some information to make your profile stand out
             </p>

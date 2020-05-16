@@ -4,18 +4,18 @@ import { connect } from 'react-redux';
 
 import { setAlert, removeAlerts } from '../../actions/alert';
 
-import { addExperience } from '../../services/ProfileServices';
+import { addEducation } from '../../services/ProfileServices';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCodeBranch } from '@fortawesome/free-solid-svg-icons';
+import { faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 
-const AddExperience = ({ setAlert, removeAlerts }) => {
+const AddEducation = ({ setAlert, removeAlerts }) => {
 
     const [redirect, setRedirect] = useState(null);
     const [formData, setFormData] = useState({
-        title: '',
-        company: '',
-        location: '',
+        school: '',
+        degree: '',
+        fieldOfStudy: '',
         from: '',
         to: '',
         current: false,
@@ -35,21 +35,21 @@ const AddExperience = ({ setAlert, removeAlerts }) => {
         e.preventDefault();
         removeAlerts();
 
-        if (formData.current && (!formData.title || !formData.company || !formData.from)) {
-            setAlert('The job title, company, and from date fields are required', 'danger');
+        if (formData.current && (!formData.school || !formData.degree || !formData.from)) {
+            setAlert('The school, degree, and from date fields are required', 'danger');
 
             window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
-        } else if (!formData.current && (!formData.title || !formData.company || !formData.from || !formData.to)) {
-            setAlert('The job title, company, and from date fields are required', 'danger');
+        } else if (!formData.current && (!formData.school || !formData.degree || !formData.from || !formData.to) ) {
+            setAlert('The school, degree, from date, and to date fields are required', 'danger');
 
             window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
         } else {
             console.log('valid form data', formData);
 
-            addExperience(formData, (experience) => {
-                console.log('Experience data from server', experience);
+            addEducation(formData, (education) => {
+                console.log('Education data from server', education);
 
-                setAlert('Successfully added experience!', 'success');
+                setAlert('Successfully added education!', 'success');
                 setRedirect('/dashboard');
             }, (error) => {
                 console.log(error);
@@ -65,41 +65,41 @@ const AddExperience = ({ setAlert, removeAlerts }) => {
     return (
         <div>
             <h1 className="large text-primary">
-                Add Experience
+                Add Education
             </h1>
             <p className="lead">
-                <FontAwesomeIcon icon={faCodeBranch} /> Add any developer/programming
+                <FontAwesomeIcon icon={faGraduationCap}/> Add any developer/programming
                 positions that you have had in the past
             </p>
             <small>Fields marked with an * are required</small>
             <form className="form" onSubmit={(e) => onSubmit(e)}>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="title">* Job Title</label>
+                    <label className="form-label" htmlFor="school">* School or Bootcamp</label>
                     <input
                         type="text"
                         placeholder="Enter Job Title"
-                        name="title"
+                        name="school"
                         value={formData.title}
                         onChange={(e) => onChange(e)}
                         required
                     />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="company">* Company</label>
+                    <label className="form-label" htmlFor="degree">* Degree or Certificate</label>
                     <input
                         type="text"
                         placeholder="Enter Company"
-                        name="company"
+                        name="degree"
                         value={formData.company}
                         onChange={(e) => onChange(e)}
                         required />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="location">Location</label>
+                    <label className="form-label" htmlFor="fieldOfStudy">Field of Study</label>
                     <input
                         type="text"
                         placeholder="Enter Location"
-                        name="location"
+                        name="fieldOfStudy"
                         value={formData.location}
                         onChange={(e) => onChange(e)}
                     />
@@ -123,7 +123,7 @@ const AddExperience = ({ setAlert, removeAlerts }) => {
                                 ...formData,
                                 current: !formData.current
                             })}
-                        /> Current Job
+                        /> Current School or Bootcamp
                     </p>
                 </div>
                 <div className="form-group">
@@ -137,7 +137,7 @@ const AddExperience = ({ setAlert, removeAlerts }) => {
                     />
                 </div>
                 <div className="form-group">
-                    <label className="form-label" htmlFor="description">Job Description</label>
+                    <label className="form-label" htmlFor="description">Program Description</label>
                     <textarea
                         name="description"
                         cols="30"
@@ -155,4 +155,4 @@ const AddExperience = ({ setAlert, removeAlerts }) => {
     )
 }
 
-export default connect(null, { setAlert, removeAlerts })(AddExperience);
+export default connect(null, { setAlert, removeAlerts })(AddEducation);

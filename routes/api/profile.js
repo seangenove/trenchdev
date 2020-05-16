@@ -134,46 +134,10 @@ router.delete('/', auth, async (req, res) => {
 
 });
 
-// @route   PUT api/profile/experience
-// @desc    Add profile experience
-// @access  Private
-router.put('/experience', [auth, [
-    check('title', 'Title is required').not().isEmpty(),
-    check('company', 'Company is required').not().isEmpty(),
-    check('from', 'From date is required').not().isEmpty(),
-]], async (req, res) => {
-    try {
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            return res.status(400).send({ errors: errors.array() })
-        }
-
-        const { title, company, location, from, to, current, description } = req.body;
-        const newExp = { title, company, location, from, to, current, description };
-
-        try {
-            const profile = await Profile.findOne({ user: req.user.id });
-
-            profile.experience.unshift(newExp);
-            await profile.save();
-
-            res.json(profile);
-        } catch (err) {
-            console.error(err);
-            res.status(500).send('Server Error');
-        }
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Server error');
-    }
-
-});
-
 // @route   POST api/profile/experience
 // @desc    Add profile experience
 // @access  Private
-router.put('/experience', [auth, [
+router.post('/experience', [auth, [
     check('title', 'Title is required').not().isEmpty(),
     check('company', 'Company is required').not().isEmpty(),
     check('from', 'From date is required').not().isEmpty(),
@@ -227,7 +191,7 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
 // @route   POST api/profile/education
 // @desc    Add profile education
 // @access  Private
-router.put('/education', [auth,
+router.post('/education', [auth,
     check('school', 'School is required').not().isEmpty(),
     check('degree', 'Degree is required').not().isEmpty(),
     check('fieldOfStudy', 'Field of study is required').not().isEmpty(),
