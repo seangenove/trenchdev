@@ -56,8 +56,8 @@ const Profiles = () => {
 
                             <ul>
                                 {
-                                    skills.map((skill) => (
-                                        <li className="text-primary">
+                                    skills.map((skill, index) => (
+                                        <li className="text-primary" key={`${user._id}-${skill}`}>
                                             <FontAwesomeIcon icon={faCheck} />{` ${skill}`}
                                         </li>
                                     ))

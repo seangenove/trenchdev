@@ -7,10 +7,14 @@ import { AppApiRequest } from "./index";
  * @param onFailure
  */
 export const fetchProfile = (onSuccess, onFailure) => {
+    console.log(`${Endpoints.USER_PROFILE}`);
     AppApiRequest(Endpoints.USER_PROFILE, 'GET', onSuccess, onFailure);
+    
 };
 
 export const fetchProfileById = (id, onSuccess, onFailure) => {
+    console.log(`${Endpoints.USER_PROFILE}`);
+    console.log(`${Endpoints.PROFILE_BY_ID}/${id}`);
     AppApiRequest(`${Endpoints.PROFILE_BY_ID}/${id}`, 'GET', onSuccess, onFailure);
 };
 
