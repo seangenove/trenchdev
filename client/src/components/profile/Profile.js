@@ -206,7 +206,7 @@ const Profile = ({ match }) => {
                     profile.githubusername && (
                         <div className="profile-github">
                             <h2 className="text-primary my-1">
-                                <FontAwesomeIcon icon={faGithub} /> Github Repos
+                                <FontAwesomeIcon icon={faGithub} /> Github Repositories
                             </h2>
                             {
                                 repos.map((repo) => (
