@@ -24,6 +24,12 @@ const Navbar = ({ isAuthenticated, loading, logout }) => {
 const AuthLinks = ({ logout }) => (
     <ul>
         <li>
+            <Link to="/posts">
+                <span className="hide-sm">{' '}Posts</span>
+            </Link>
+        </li>
+        <li>
+            {` | `}
             <Link to="/dashboard">
                 <FontAwesomeIcon icon={faUser} />
                 <span className="hide-sm">{' '}Dashboard</span>

@@ -8,39 +8,6 @@ const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 
 // @route   GET api/posts
-// @desc    Create post
-// @access  Public
-router.post('/', [
-    auth,
-    check('text', 'text is required').not().isEmpty(),
-], async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-
-    try {
-        const user = await User.findById(req.user.id).select('-password');
-
-        const newPost = new Post({
-            text: req.body.text,
-            name: user.name,
-            avatar: user.avatar,
-            user: req.user.id
-        })
-
-        const post = await newPost.save();
-
-        res.json(post);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Server error');
-    }
-
-});
-
-// @route   GET api/posts/
 // @desc    Get all posts
 // @access  Private
 router.get('/', auth, async (req, res) => {
@@ -81,10 +48,43 @@ router.get('/:post_id', auth, async (req, res) => {
     }
 });
 
-// @route   DELETE api/posts/:id
+// @route   POST api/posts
+// @desc    Create post
+// @access  Public
+router.post('/', [
+    auth,
+    check('text', 'text is required').not().isEmpty(),
+], async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+
+        const newPost = new Post({
+            text: req.body.text,
+            name: user.name,
+            avatar: user.avatar,
+            user: req.user.id
+        })
+
+        const post = await newPost.save();
+
+        res.json(post);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+
+});
+
+// @route   POST api/posts/:id
 // @desc    Delete post by id
 // @access  Private
-router.delete('/:id', auth, async (req, res) => {
+router.post('/:id', auth, async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
 
@@ -110,10 +110,10 @@ router.delete('/:id', auth, async (req, res) => {
     }
 });
 
-// @route   PUT api/posts/like/:id
+// @route   POST api/posts/like/:id
 // @desc    Like a post
 // @access  Private
-router.put('/like/:id', auth, async (req, res) => {
+router.post('/like/:id', auth, async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
 
@@ -142,10 +142,10 @@ router.put('/like/:id', auth, async (req, res) => {
     }
 });
 
-// @route   PUT api/posts/unlike/:id
+// @route   POST api/posts/unlike/:id
 // @desc    Like a post
 // @access  Private
-router.put('/unlike/:id', auth, async (req, res) => {
+router.post('/unlike/:id', auth, async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
 
@@ -177,10 +177,10 @@ router.put('/unlike/:id', auth, async (req, res) => {
     }
 });
 
-// @route   PUT api/posts/comment/:id
+// @route   POST api/posts/comment/:id
 // @desc    Add comment to post
 // @access  Private
-router.put('/comment/:id', [
+router.post('/comment/:id', [
     auth,
     check('text', 'text is required').not().isEmpty(),
 ], async (req, res) => {
