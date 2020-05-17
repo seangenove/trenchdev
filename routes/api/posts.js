@@ -222,10 +222,10 @@ router.post('/comment/:id', [
     }
 });
 
-// @route   DELETE api/posts/comment/:post_id/:comment_id
+// @route   POST api/posts/comment/:post_id/:comment_id
 // @desc    Delete comment from post
 // @access  Private
-router.delete('/comment/:post_id/:comment_id', auth, async (req, res) => {
+router.post('/comment/:post_id/:comment_id', auth, async (req, res) => {
     try {
         const post = await Post.findById(req.params.post_id);
 

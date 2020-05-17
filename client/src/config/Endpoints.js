@@ -9,6 +9,7 @@ const Endpoints = {
     POSTS: '/api/posts',
     POST_LIKE: '/api/posts/like',
     POST_UNLIKE: '/api/posts/unlike',
+    POST_COMMENTS: '/api/posts/comment'
 };
 
 export default Endpoints;

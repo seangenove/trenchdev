@@ -1,97 +1,154 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
 
-import { fetchPosts } from '../../services/PostsServices';
+import { setAlert, removeAlerts } from '../../actions/alert';
+import { fetchPostById, addComment, deleteComment } from '../../services/PostsServices';
 
 import Spinner from '../layout/Spinner';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGlobe, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
-const Post = ({ match }) => {
+const Post = ({ match, setAlert, removeAlerts }) => {
 
     const id = match.params.id
 
     const [loading, setLoading] = useState(true);
-    const [profiles, setProfiles] = useState(null);
+    const [post, setPost] = useState(null);
+    const [formData, setFormData] = useState({ text: '' });
 
-    const getPosts = () => {
+    const getPost = () => {
         setLoading(true);
 
-        fetchPosts((posts) => {
-            console.log('Posts data  from server', posts);
+        fetchPostById(id, (post) => {
+            console.log('Post data  from server', post);
 
-            setPosts(posts);
+            setPost(post);
             setLoading(false);
         }, (error) => {
-            alert('An error occured');
+            alert('An error occured while fetching post');
             console.log(error);
         });
+    };
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        removeAlerts();
+
+        if (!formData.text) {
+            setAlert('Please provide text input for your comment.', 'danger')
+        } else {
+            // Valid form data
+            addComment(post._id, formData, (post) => {
+                console.log('Post data from server', post);
+
+                setFormData({ text: '' });
+                getPost();
+                setAlert('Successfully added post!', 'success');
+            }, (error) => {
+                alert('An error occured in creating the post');
+                console.log(error);
+            })
+        }
+    };
+
+    const onDelete = (commentId) => {
+        const confirmDelete = window.confirm(`Are you sure you want to delete your comment?`);
+
+        if (confirmDelete) {
+            setLoading(true);
+
+            deleteComment(post._id, commentId, (comments) => {
+                console.log('Updated comments data from server', comments);
+
+                setAlert('Successfully deleted comment!', 'success');
+                getPost();
+            }, (error) => {
+                alert('An error occured while deleting the post');
+                console.log(error)
+            })
+        }
     }
 
     useEffect(() => {
-        getPosts();
+        getPost();
     }, []);
 
     return loading ? (<Spinner />) : (
         <div>
-            <h1 class="large text-primary">
-                Posts
-      </h1>
-            <p class="lead">
-                <i class="fas fa-user"></i> Welcome to the community!
-            </p>
-
-            <div class="posts">
-                {
-                    posts.length !== 0 && posts.map((post) => (
-                        <Fragment>
-                            <div class="post bg-white p-1 my-1">
-                                <div>
-                                    <a href="profile.html">
-                                        <img
-                                            class="round-img"
-                                            src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200"
-                                            alt=""
-                                        />
-                                        <h4>John Doe</h4>
-                                    </a>
-                                </div>
-                                <div>
-                                    <p class="my-1">
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
-              possimus corporis sunt necessitatibus! Minus nesciunt soluta
-              suscipit nobis. Amet accusamus distinctio cupiditate blanditiis
-              dolor? Illo perferendis eveniet cum cupiditate aliquam?
-            </p>
-                                    <p class="post-date">
-                                        Posted on 04/16/2019
-            </p>
-                                    <button type="button" class="btn btn-light">
-                                        <i class="fas fa-thumbs-up"></i>
-                                        <span>4</span>
-                                    </button>
-                                    <button type="button" class="btn btn-light">
-                                        <i class="fas fa-thumbs-down"></i>
-                                    </button>
-                                    <a href="post.html" class="btn btn-primary">
-                                        Discussion <span class='comment-count'>2</span>
-                                    </a>
-                                    <button
-                                        type="button"
-                                        class="btn btn-danger"
-                                    >
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </Fragment>
-                    ))
-                }
+            <Link to="/posts" className="btn">Back To Posts</Link>
+            <div className="post bg-white p-1 my-1">
+                <div>
+                    <Link to={`/profile/${post.user}`}>
+                        <img
+                            className="round-img"
+                            src={`${post.avatar}`}
+                            alt=""
+                        />
+                        <h4>{post.name}</h4>
+                    </Link>
+                </div>
+                <div>
+                    <p className="my-1">{post.text}</p>
+                </div>
             </div>
+
+            <div className="post-form">
+                <div className="bg-primary p">
+                    <h3>Leave A Comment</h3>
+                </div>
+                <form className="form my-1" onSubmit={(e) => onSubmit(e)}>
+                    <textarea
+                        name="text"
+                        cols="30"
+                        rows="5"
+                        placeholder="Comment on this post"
+                        required
+                        value={formData.text}
+                        onChange={(e) => setFormData({ text: e.target.value })}
+                    ></textarea>
+                    <input type="submit" className="btn btn-dark my-1" onSubmit={(e) => onSubmit(e)} />
+                </form>
+            </div>
+
+            {
+                post.comments.length !== 0 && (
+                    <div className="comments">
+                        {
+                            post.comments.map((comment, index) => (
+                                <div className="post bg-white p-1 my-1" key={index}>
+                                    <div>
+                                        <Link to={`/profile/${comment.user}`}>
+                                            <img
+                                                className="round-img"
+                                                src={`${comment.avatar}`}
+                                                alt=""
+                                            />
+                                            <h4>{comment.name}</h4>
+                                        </Link>
+                                    </div>
+                                    <div>
+                                        <p className="my-1">{comment.text}</p>
+                                        <p className="post-date">
+                                            Posted on<Moment format='MM/DD/YYYY'>{` ${comment.date}`}</Moment>
+                                        </p>
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger"
+                                            onClick={() => onDelete(comment._id)}
+                                        >
+                                            <FontAwesomeIcon icon={faTimes}/>
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        }
+                    </div>
+                )}
         </div>
     )
 };
 
-export default Post;
+export default connect(null, { setAlert, removeAlerts })(Post);

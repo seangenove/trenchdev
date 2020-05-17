@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
 
 import { setAlert, removeAlerts } from '../../actions/alert';
-
 import { fetchPosts, deletePost, addLike, removeLike } from '../../services/PostsServices';
 
 import Spinner from '../layout/Spinner';
@@ -18,7 +17,10 @@ const Posts = ({ userId, setAlert, removeAlerts }) => {
     const [loading, setLoading] = useState(true);
     const [posts, setPosts] = useState(null);
 
-    const getPosts = () => {
+    const getPosts = (useLoadingEffect = false) => {
+        if (useLoadingEffect) {
+            setLoading(true);
+        }
 
         fetchPosts((posts) => {
             console.log('Posts', posts);
@@ -106,14 +108,14 @@ const Posts = ({ userId, setAlert, removeAlerts }) => {
                     posts.length !== 0 && posts.map((post, index) => (
                         <div className="post bg-white p-1 my-1" key={index}>
                             <div>
-                                <a href={`/post/${post.user}`}>
+                                <Link to={`/profile/${post.user}`}>
                                     <img
                                         className="round-img"
                                         src={`${post.avatar}`}
                                         alt=""
                                     />
                                     <h4>{post.name}</h4>
-                                </a>
+                                </Link>
                             </div>
                             <div>
                                 <p className="my-1">{post.text}</p>
@@ -139,9 +141,16 @@ const Posts = ({ userId, setAlert, removeAlerts }) => {
                                     <FontAwesomeIcon icon={faThumbsDown} />
                                 </button>
 
-                                <a href="post.html" className="btn btn-primary">
-                                    Discussion <span className='comment-count'>2</span>
-                                </a>
+                                <Link to={`/post/${post._id}`} className="btn btn-primary">
+                                    {'Discussion '}
+                                    {
+                                        post.comments.length !== 0 && (
+                                            <span className='comment-count'>
+                                                {`${post.comments.length}`}
+                                            </span>
+                                        )
+                                    }
+                                </Link>
 
                                 {
                                     userId === post.user && (
