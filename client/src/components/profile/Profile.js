@@ -67,7 +67,7 @@ const Profile = ({ match }) => {
                     />
                     <h1 className="large">{profile.user.name}</h1>
                     <p className="lead">{profile.status}</p>
-                    {profile.location && (<p>Seattle, WA</p>)}
+                    {profile.location && (<p>{profile.location}</p>)}
                     <div className="icons my-1">
                         {
                             profile.website && (
