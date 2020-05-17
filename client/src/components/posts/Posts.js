@@ -23,8 +23,6 @@ const Posts = ({ userId, setAlert, removeAlerts }) => {
         }
 
         fetchPosts((posts) => {
-            console.log('Posts', posts);
-
             setPosts(posts);
             setLoading(false);
         }, (error) => {
@@ -38,8 +36,6 @@ const Posts = ({ userId, setAlert, removeAlerts }) => {
 
         if (!isLiked) {
             addLike(post._id, (likes) => {
-                console.log('Updated likes data from server', likes);
-
                 getPosts();
             }, (error) => {
                 alert('Error on like/unlike');

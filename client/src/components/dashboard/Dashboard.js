@@ -20,7 +20,6 @@ const Dashboard = ({ user, isAuthenticated, setAlert, removeAlerts }) => {
 
     const getProfile = () => {
         fetchProfile((profile) => {
-            console.log(profile);
             setProfile(profile);
             setLoading(false);
         }, (error) => {

@@ -2,7 +2,6 @@ import Endpoints from "../config/Endpoints";
 import { AppApiRequest } from "./index";
 
 export const fetchProfile = (onSuccess, onFailure) => {
-    console.log(`${Endpoints.USER_PROFILE}`);
     AppApiRequest(Endpoints.USER_PROFILE, 'GET', onSuccess, onFailure);
     
 };

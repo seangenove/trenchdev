@@ -29,13 +29,10 @@ const Profile = ({ match }) => {
         setLoading(true);
 
         fetchProfileById(id, (profile) => {
-            console.log('Profile data from server', profile);
             setProfile(profile);
 
             if (profile.githubusername) {
                 fetchGithubRepositories(profile.githubusername, (repos) => {
-                    console.log('Github Repositories data from server', repos);
-                    
                     setRepos(repos);
                     setLoading(false);
                 }, (error) => {

@@ -35,8 +35,6 @@ const ProfileForm = ({ isCreateMode = true, setAlert, removeAlerts }) => {
 
     const getProfile = () => {
         fetchProfile((profile) => {
-            console.log('Profile data from server', profile);
-
             setProfile(profile);
             setFormData({
                 ...formData,
@@ -94,10 +92,7 @@ const ProfileForm = ({ isCreateMode = true, setAlert, removeAlerts }) => {
             });
         } else {
             // Validation success
-            console.log('Form Data', formData);
-
             upsertProfile(formData, (profile) => {
-                console.log('Profile data from server', profile);
                 setAlert(`Successfully ${isCreateMode ? 'created' : 'updated'} profile!`, 'success');
                 setRedirect('/dashboard');
             }, (error) => {

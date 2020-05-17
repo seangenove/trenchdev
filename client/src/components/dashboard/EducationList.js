@@ -11,7 +11,6 @@ const EducationList = ({ education, setProfile }) => {
         if (confirmDelete) {
 
             deleteEducation(id, (profile) => {
-                console.log('Updated profile from server', profile);
                 setProfile(profile);
             }, (error) => {
                 alert("There was a problem deleting the education entry");

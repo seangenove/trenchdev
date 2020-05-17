@@ -34,7 +34,6 @@ const AddEducation = ({ setAlert, removeAlerts }) => {
     const onSubmit = (e) => {
         e.preventDefault();
         removeAlerts();
-        console.log(formData);
 
         if (formData.current && (!formData.school || !formData.degree || !formData.fieldOfStudy || !formData.from)) {
             setAlert('The school, degree, field of study and from date fields are required', 'danger');
@@ -45,11 +44,7 @@ const AddEducation = ({ setAlert, removeAlerts }) => {
 
             window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
         } else {
-            console.log('valid form data', formData);
-
             addEducation(formData, (education) => {
-                console.log('Education data from server', education);
-
                 setAlert('Successfully added education credential!', 'success');
                 setRedirect('/dashboard');
             }, (error) => {

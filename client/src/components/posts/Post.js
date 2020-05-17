@@ -23,8 +23,6 @@ const Post = ({ match, setAlert, removeAlerts }) => {
         setLoading(true);
 
         fetchPostById(id, (post) => {
-            console.log('Post data  from server', post);
-
             setPost(post);
             setLoading(false);
         }, (error) => {
@@ -42,8 +40,6 @@ const Post = ({ match, setAlert, removeAlerts }) => {
         } else {
             // Valid form data
             addComment(post._id, formData, (post) => {
-                console.log('Post data from server', post);
-
                 setFormData({ text: '' });
                 getPost();
                 setAlert('Successfully added post!', 'success');
@@ -61,8 +57,6 @@ const Post = ({ match, setAlert, removeAlerts }) => {
             setLoading(true);
 
             deleteComment(post._id, commentId, (comments) => {
-                console.log('Updated comments data from server', comments);
-
                 setAlert('Successfully deleted comment!', 'success');
                 getPost();
             }, (error) => {

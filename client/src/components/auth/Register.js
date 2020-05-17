@@ -34,9 +34,6 @@ const Register = ({ setAlert, removeAlerts, register, isAuthenticated }) => {
         } else if (password !== confirmPassword) {
             setAlert('Passwords do not match', 'danger');
         } else {
-            // Valid credentials
-            console.log('Valid data', formData);
-
             register(name, email, password);
         }
     }

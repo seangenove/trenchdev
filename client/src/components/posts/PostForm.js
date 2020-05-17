@@ -19,8 +19,6 @@ const PostForm = ({ getPosts, setAlert, removeAlerts }) => {
         } else {
             // Valid form data
             createPost(formData, (post) => {
-                console.log('Post data from server', post);
-
                 setFormData({ text: '' })
                 getPosts(true);
                 setAlert('Successfully added post!', 'success');

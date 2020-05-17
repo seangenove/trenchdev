@@ -44,11 +44,7 @@ const AddExperience = ({ setAlert, removeAlerts }) => {
 
             window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
         } else {
-            console.log('valid form data', formData);
-
             addExperience(formData, (experience) => {
-                console.log('Experience data from server', experience);
-
                 setAlert('Successfully added experience credential!', 'success');
                 setRedirect('/dashboard');
             }, (error) => {

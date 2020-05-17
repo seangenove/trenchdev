@@ -11,7 +11,6 @@ const ExperienceList = ({ experiences, setProfile }) => {
         if (confirmDelete) {
 
             deleteExperience(id, (profile) => {
-                console.log('Updated profile from server', profile);
                 setProfile(profile);
             }, (error) => {
                 alert("There was a problem deleting the experience entry");
