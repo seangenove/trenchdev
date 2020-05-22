@@ -16,7 +16,6 @@ const Profiles = () => {
         setLoading(true);
 
         fetchAllProfiles((profiles) => {
-            console.log(profiles)
 
             setProfiles(profiles);
             setLoading(false);

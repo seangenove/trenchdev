@@ -157,7 +157,7 @@ const Profile = ({ match }) => {
                                         <h3 className="text-dark">{experience.company}</h3>
                                         <p>
                                             <Moment format='MMM YYYY'>{experience.from}</Moment> -{' '}
-                                            {experience.company.current ? 'Present' : <Moment format='MMM YYYY'>{experience.to}</Moment>}
+                                            {experience.current ? 'Present' : <Moment format='MMM YYYY'>{experience.to}</Moment>}
                                         </p>
                                         <p><strong>Position: </strong>{experience.title}</p>
                                         {
